@@ -25,8 +25,9 @@ public class GameControl : MonoBehaviour
     public Text lblButton;
     public GameObject StartPanel;
     public GameObject GameOverCanvas;
+    public GameObject HighScorePanel;
     public GameObject Bird;
-    private int score = 0;						//The player's score.
+
     private ColumnPool columnPool;
 	public bool gameOver = false;				//Is the game over?
 	public float scrollSpeed = 0f;
@@ -88,24 +89,31 @@ public class GameControl : MonoBehaviour
 		//The bird can't score if the game is over.
 		if (gameOver)	
 			return;
-		//If the game is not over, increase the score...
-		score += value;
+        //If the game is not over, increase the score...
+        ScoreManager.instance.Score += value;
 		//...and adjust the score text.
-		scoreText.text = "Счет : " + score.ToString();
+		scoreText.text = "Счет : " + ScoreManager.instance.Score.ToString();
 	}
 
 	public void BirdDied()
 	{
         EventManager.TriggerEvent("GameOver");
         GameState = State.Pause;
-        SaveLoad.SaveScore(score);
+        
         gameOver = true;
-        Debug.Log("Save score:" + score);
+        //Debug.Log("Save score:" + score);
         //Activate the game over text.
         GameOverCanvas.gameObject.SetActive(true);
+        var currentScore = ScoreManager.instance.Score;
+        var maxBeforeScore = ScoreManager.instance.GetMaxScore();
+        if (currentScore > maxBeforeScore)
+        {
+            HighScorePanel.SetActive(true);
+        }
+        ScoreManager.instance.SaveScore();
         //Set the game to be over.
-    
-	}
+
+    }
 
     public void SetDifficult(Difficult dif)
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BonusPool : MonoBehaviour
+public class BonusManager: MonoBehaviour
 {
     public GameObject gemBonusPrefab;                                 //The column game object.
     public GameObject coinBonusPrefab;                                 //The column game object.
@@ -14,23 +14,13 @@ public class BonusPool : MonoBehaviour
     private GameObject goBaseBonus;
     private float spawnXPosition = 12f;
     private float timeSinceLastSpawned;
-    private const float GEM_CHANCE = 0.1f;
+    private const float GEM_CHANCE = 1f;
 
     void Start()
     {
         timeSinceLastSpawned = 0f;
         goBaseBonus = new GameObject();
         goBaseBonus.name = "Bonuses";
-    }
-
-    void OnEnable()
-    {
-        //EventManager.StartListening("StartGame", GenerateColumns);
-    }
-
-    void OnDisable()
-    {
-        //EventManager.StopListening("StartGame", GenerateColumns);
     }
 
     //This spawns columns as long as the game is not over.
@@ -46,14 +36,10 @@ public class BonusPool : MonoBehaviour
             float spawnYPosition = Random.Range(bonusYMin, bonusYMax);
 
             var nextSpawnPos = new Vector2(spawnXPosition, spawnYPosition);
-            var bonus = Instantiate(coinBonusPrefab, nextSpawnPos, Quaternion.identity);
+            GameObject bonus = Random.Range(0,10) > GEM_CHANCE ? Instantiate(coinBonusPrefab, nextSpawnPos, Quaternion.identity) : Instantiate(gemBonusPrefab, nextSpawnPos, Quaternion.identity);
             bonus.transform.parent = goBaseBonus.transform;
             bonusesList.Add(bonus);
         }
     }
 
-    public void GenerateColumns()
-    {
-        // to do
-    }
 }

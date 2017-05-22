@@ -17,8 +17,7 @@ public class GameOverMenu : MonoBehaviour
    // public GameObject Grid;
     public GameObject ListItemPrefab;
     private bool isListShowed = false;
-    List<Score> Scores = new List<Score>();
-
+   
     public ScrollRect scrollRect;
 
 	List<GameObject> ItemsList = new List<GameObject>();
@@ -37,8 +36,6 @@ public class GameOverMenu : MonoBehaviour
             {
                 PopulateList();
                 isListShowed = true;
-                //scrollRect.verticalNormalizedPosition = 1;
-                //Grid.transform.position = new Vector2(Grid.transform.position.x, 0);
             }
 
             if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Alpha0) || Input.GetKeyDown(KeyCode.JoystickButton0))
@@ -65,11 +62,9 @@ public class GameOverMenu : MonoBehaviour
 
     void PopulateList ()
     {
-        SaveLoad.LoadScores();
-        Scores = SaveLoad.scoresList;
-		Scores.Sort ((Score item1, Score item2) => item2.Value.CompareTo(item1.Value));
+        var scoreList = ScoreManager.instance.GetScoresList();
 		int place = 1;
-        foreach (Score score in Scores)
+        foreach (Score score in scoreList)
         {
             GameObject newScore = Instantiate(ListItemPrefab) as GameObject;
 			newScore.GetComponent<Image> ().color = ColoredListItem (place); 
@@ -85,11 +80,10 @@ public class GameOverMenu : MonoBehaviour
 
 	void RepopulateList()
 	{
-		SaveLoad.ClearScores();
+        ScoreManager.instance.ClearScoreList();
 		foreach (var item in ItemsList) {
 			Destroy (item);
 		}
-		Scores.Clear ();
 		PopulateList ();
 	}
 
