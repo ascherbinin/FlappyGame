@@ -111,7 +111,7 @@ public class GameControl : MonoBehaviour
     {
         if (dif == Difficult.Easy)
         {
-            scrollSpeed = SCROLL_SPEED;
+            scrollSpeed = SCROLL_SPEED * 1.5F;
         }
         else
         {
