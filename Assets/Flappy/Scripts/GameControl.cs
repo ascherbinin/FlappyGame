@@ -27,10 +27,11 @@ public class GameControl : MonoBehaviour
     public GameObject GameOverCanvas;
     public GameObject HighScorePanel;
     public GameObject Bird;
+    public bool gameOver = false;               //Is the game over?
+    public float scrollSpeed = 0f;
+    public AudioSource backSound;
 
-    private ColumnPool columnPool;
-	public bool gameOver = false;				//Is the game over?
-	public float scrollSpeed = 0f;
+    private ColumnPool _columnPool;
 	//private string inputSTR = "";
     private const float SCROLL_SPEED = -2.5f;
     private const float SPAWN_COL_MODIFICATOR = 0.8f;
@@ -51,7 +52,7 @@ public class GameControl : MonoBehaviour
 
     void Start()
     {
-        columnPool = GetComponent<ColumnPool>();
+        _columnPool = GetComponent<ColumnPool>();
         SaveLoad.LoadScores();
         foreach (var item in SaveLoad.scoresList)
         {
@@ -82,6 +83,7 @@ public class GameControl : MonoBehaviour
         GameOverCanvas.gameObject.SetActive(false);
         Bird.gameObject.SetActive(true);
         InvokeRepeating("AddBirdScoreRepeat", 0, 1);
+        backSound.Play();
     }
 
 	public void BirdScored(int value)
@@ -97,9 +99,10 @@ public class GameControl : MonoBehaviour
 
 	public void BirdDied()
 	{
+        backSound.Stop();
         EventManager.TriggerEvent("GameOver");
         GameState = State.Pause;
-        
+        SoundManager.instance.PlayFailSound();
         gameOver = true;
         //Debug.Log("Save score:" + score);
         //Activate the game over text.
@@ -108,6 +111,7 @@ public class GameControl : MonoBehaviour
         var maxBeforeScore = ScoreManager.instance.GetMaxScore();
         if (currentScore > maxBeforeScore)
         {
+            SoundManager.instance.PlayNewHighScoreSound();
             HighScorePanel.SetActive(true);
         }
         ScoreManager.instance.SaveScore();
@@ -124,7 +128,7 @@ public class GameControl : MonoBehaviour
         else
         {
             scrollSpeed = SCROLL_SPEED * 2F;
-            columnPool.spawnRate *= SPAWN_COL_MODIFICATOR;
+            _columnPool.spawnRate *= SPAWN_COL_MODIFICATOR;
         }
     }
 

@@ -10,6 +10,7 @@ public class Gem : MonoBehaviour
     {
         if (other.gameObject.tag == "Bird")
         {
+            SoundManager.instance.PlayGemTakeSound();
             Destroy(gameObject);
             GameControl.instance.BirdScored(Value);
         }

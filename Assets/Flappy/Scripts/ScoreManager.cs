@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
-    private int score = 0;                      //The player's score.
     public static ScoreManager instance;            //A reference to our game control script so we can access it statically.
     List<Score> Scores = new List<Score>();
 

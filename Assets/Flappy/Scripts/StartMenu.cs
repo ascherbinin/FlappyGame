@@ -25,6 +25,7 @@ public class StartMenu : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
+                SoundManager.instance.PlaySelectSound();
                 if (_selectedIndex != 0)
                 {
                     _selectedIndex--;
@@ -36,6 +37,7 @@ public class StartMenu : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
+                SoundManager.instance.PlaySelectSound();
                 _selectedIndex++;
                 if (_selectedIndex > _btnList.Count - 1)
                 {

@@ -10,6 +10,7 @@ public class Coin : MonoBehaviour
     {
         if (other.gameObject.tag == "Bird")
         {
+            SoundManager.instance.PlayCoinTakeSound();
             Destroy(gameObject);
             GameControl.instance.BirdScored(Value);
         }
