@@ -23,6 +23,8 @@ public class GameControl : MonoBehaviour
 	public Text scoreText;						//A reference to the UI text component that displays the player's score.
     public State GameState;
     public Text lblButton;
+    public Text txtCoinValue;
+    public Text txtGemValue;
     public GameObject StartPanel;
     public GameObject GameOverCanvas;
     public GameObject HighScorePanel;
@@ -33,12 +35,10 @@ public class GameControl : MonoBehaviour
 
     private ColumnPool _columnPool;
 	//private string inputSTR = "";
-    private const float SCROLL_SPEED = -2.5f;
-    private const float SPAWN_COL_MODIFICATOR = 0.8f;
-    
 
 
-	void Awake()
+
+    void Awake()
 	{
 		//If we don't currently have a game control...
 		if (instance == null)
@@ -86,17 +86,6 @@ public class GameControl : MonoBehaviour
         backSound.Play();
     }
 
-	public void BirdScored(int value)
-	{
-		//The bird can't score if the game is over.
-		if (gameOver)	
-			return;
-        //If the game is not over, increase the score...
-        ScoreManager.instance.Score += value;
-		//...and adjust the score text.
-		scoreText.text = "Счет : " + ScoreManager.instance.Score.ToString();
-	}
-
 	public void BirdDied()
 	{
         backSound.Stop();
@@ -123,19 +112,28 @@ public class GameControl : MonoBehaviour
     {
         if (dif == Difficult.Easy)
         {
-            scrollSpeed = SCROLL_SPEED * 1.5F;
+            scrollSpeed = Consts.SCROLL_SPEED * 1.5F;
         }
         else
         {
-            scrollSpeed = SCROLL_SPEED * 2F;
-            _columnPool.spawnRate *= SPAWN_COL_MODIFICATOR;
+            scrollSpeed = Consts.SCROLL_SPEED * 2.5F;
+            _columnPool.spawnRate *= Consts.SPAWN_COL_MODIFICATOR;
         }
     }
+
+
+    public void UpdateLegends()
+    {
+        txtCoinValue.text = "x " + Consts.COIN_VALUE * ScoreManager.instance.Modify;
+        txtGemValue.text = "x " + Consts.GEM_VALUE * ScoreManager.instance.Modify;
+    }
+
 
     //Internal
     private void AddBirdScoreRepeat()
     {
-        BirdScored(10);
+        ScoreManager.instance.AddScore(10, false);
+        scoreText.text = "Счет : " + ScoreManager.instance.Score.ToString();
     }
 
 

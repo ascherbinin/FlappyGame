@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Gem : MonoBehaviour
 {
-    private const int Value = 200;
+
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -12,7 +12,7 @@ public class Gem : MonoBehaviour
         {
             SoundManager.instance.PlayGemTakeSound();
             Destroy(gameObject);
-            GameControl.instance.BirdScored(Value);
+            ScoreManager.instance.AddScore(Consts.GEM_VALUE, true);
         }
     }
 }

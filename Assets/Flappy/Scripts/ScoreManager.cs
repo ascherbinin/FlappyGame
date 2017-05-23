@@ -8,6 +8,7 @@ public class ScoreManager : MonoBehaviour
     List<Score> Scores = new List<Score>();
 
     public int Score { get; set; }
+    public int Modify { get; set; }
 
     void Awake()
     {
@@ -19,6 +20,7 @@ public class ScoreManager : MonoBehaviour
         else if (instance != this)
             //...destroy this one because it is a duplicate.
             Destroy(gameObject);
+        Modify = 1;
     }
 
     public void SaveScore ()
@@ -50,6 +52,17 @@ public class ScoreManager : MonoBehaviour
     {
         Scores.Clear();
         SaveLoad.ClearScores();
+    }
+
+    public void AddScore(int value, bool useModify)
+    {
+        var tmpValue = value;
+        //The bird can't score if the game is over.
+        if (GameControl.instance.gameOver)
+            return;
+        if (useModify)
+            tmpValue *= Modify;
+        Score += tmpValue;
     }
 
     // Update is called once per frame

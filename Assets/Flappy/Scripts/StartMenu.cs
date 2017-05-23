@@ -25,6 +25,7 @@ public class StartMenu : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
+                ScoreManager.instance.Modify = 1;
                 SoundManager.instance.PlaySelectSound();
                 if (_selectedIndex != 0)
                 {
@@ -37,6 +38,7 @@ public class StartMenu : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
+                ScoreManager.instance.Modify = 2;
                 SoundManager.instance.PlaySelectSound();
                 _selectedIndex++;
                 if (_selectedIndex > _btnList.Count - 1)
@@ -48,7 +50,7 @@ public class StartMenu : MonoBehaviour
             {
                 SendStarCommand(_selectedIndex);
             }
-
+            GameControl.instance.UpdateLegends();
             DrawButtons(_selectedIndex);
         }
     }

@@ -7,9 +7,9 @@ public class Column : MonoBehaviour
 	{
 		if(other.GetComponent<Bird>() != null)
 		{
-			//If the bird hits the trigger collider in between the columns then
-			//tell the game control that the bird scored.
-			GameControl.instance.BirdScored(50);
-		}
+            //If the bird hits the trigger collider in between the columns then
+            //tell the game control that the bird scored.
+            ScoreManager.instance.AddScore(Consts.COLUMN_VALUE, false);
+        }
 	}
 }

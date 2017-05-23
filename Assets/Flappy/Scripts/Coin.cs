@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
-    private const int Value = 25;
-
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.tag == "Bird")
         {
             SoundManager.instance.PlayCoinTakeSound();
             Destroy(gameObject);
-            GameControl.instance.BirdScored(Value);
+            ScoreManager.instance.AddScore(Consts.COIN_VALUE, true);
         }
     }
 }
