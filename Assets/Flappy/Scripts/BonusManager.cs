@@ -26,20 +26,24 @@ public class BonusManager: MonoBehaviour
     //This spawns columns as long as the game is not over.
     void Update()
     {
-        timeSinceLastSpawned += Time.deltaTime;
-
-        if (GameControl.instance.gameOver == false && timeSinceLastSpawned >= spawnRate && GameControl.instance.GameState == State.Play)
+        if (GameControl.instance.GameState == State.Play)
         {
-            timeSinceLastSpawned = 0f;
+            timeSinceLastSpawned += Time.deltaTime;
+            if (GameControl.instance.gameOver == false && timeSinceLastSpawned >= spawnRate)
+            {
 
-            //Set a random y position for the column
-            float spawnYPosition = Random.Range(bonusYMin, bonusYMax);
+                timeSinceLastSpawned = 0f;
 
-            var nextSpawnPos = new Vector2(spawnXPosition, spawnYPosition);
-            GameObject bonus = Random.Range(0,10) > GEM_CHANCE ? Instantiate(coinBonusPrefab, nextSpawnPos, Quaternion.identity) : Instantiate(gemBonusPrefab, nextSpawnPos, Quaternion.identity);
-            bonus.transform.parent = goBaseBonus.transform;
-            bonusesList.Add(bonus);
+                //Set a random y position for the column
+                float spawnYPosition = Random.Range(bonusYMin, bonusYMax);
+
+                var nextSpawnPos = new Vector2(spawnXPosition, spawnYPosition);
+                GameObject bonus = Random.Range(0, 10) > GEM_CHANCE ? Instantiate(coinBonusPrefab, nextSpawnPos, Quaternion.identity) : Instantiate(gemBonusPrefab, nextSpawnPos, Quaternion.identity);
+                bonus.transform.parent = goBaseBonus.transform;
+                bonusesList.Add(bonus);
+            }
         }
+        
     }
 
 }

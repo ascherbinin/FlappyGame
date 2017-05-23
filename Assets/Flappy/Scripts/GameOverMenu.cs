@@ -66,6 +66,7 @@ public class GameOverMenu : MonoBehaviour
 		int place = 1;
         foreach (Score score in scoreList)
         {
+            if (place > 6) return;
             GameObject newScore = Instantiate(ListItemPrefab) as GameObject;
 			newScore.GetComponent<Image> ().color = ColoredListItem (place); 
             ListItemController controller = newScore.GetComponent<ListItemController>();
