@@ -5,6 +5,7 @@ using UnityEngine;
 public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager instance;            //A reference to our game control script so we can access it statically.
+    public GameObject rewardTextPrefab;
     List<Score> Scores = new List<Score>();
 
     public int Score { get; set; }
@@ -61,7 +62,17 @@ public class ScoreManager : MonoBehaviour
         if (GameControl.instance.gameOver)
             return;
         if (useModify)
+        {
             tmpValue *= Modify;
+            //For show reward text
+            //Debug.Log("POS:" + _bird.transform.position);
+            //Vector2 worldPos = new Vector2(_bird.transform.position.x, _bird.transform.position.y);
+            //Vector2 screenPos = Camera.main.WorldToScreenPoint(worldPos);
+            //var go = Instantiate(rewardTextPrefab, new Vector2(_bird.transform.position.x, _bird.transform.position.y), Quaternion.identity);
+            //go.GetComponent<RewardText>().Init(tmpValue);
+            //go.transform.position = new Vector2(screenPos.x, screenPos.y);
+        }
+            
         Score += tmpValue;
     }
 

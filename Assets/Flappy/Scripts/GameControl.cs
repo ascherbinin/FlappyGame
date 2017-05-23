@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
+using UnityEngine.Analytics;
 
 public enum Difficult
 {
@@ -33,6 +34,7 @@ public class GameControl : MonoBehaviour
     public float scrollSpeed = 0f;
     public AudioSource backSound;
 
+    private string UniqueID;
     private ColumnPool _columnPool;
 	//private string inputSTR = "";
 
@@ -52,6 +54,11 @@ public class GameControl : MonoBehaviour
 
     void Start()
     {
+        UniqueID = SystemInfo.deviceUniqueIdentifier;
+        MyAnalytics.SetID(UniqueID);
+        var dictEvent = new Dictionary<string, object> { { "StartGame", true } };
+        MyAnalytics.SendEvent("Start", dictEvent);
+        GameState = State.Pause;
         _columnPool = GetComponent<ColumnPool>();
         SaveLoad.LoadScores();
         foreach (var item in SaveLoad.scoresList)
@@ -104,6 +111,8 @@ public class GameControl : MonoBehaviour
             HighScorePanel.SetActive(true);
         }
         ScoreManager.instance.SaveScore();
+        var dictEvent = new Dictionary<string, object> { { "HighScore", currentScore } };
+        MyAnalytics.SendEvent("End", dictEvent);
         //Set the game to be over.
 
     }
