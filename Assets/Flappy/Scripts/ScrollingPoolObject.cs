@@ -5,6 +5,7 @@ using UnityEngine;
 public class ScrollingPoolObject : MonoBehaviour 
 {
 	private Rigidbody2D rb2d;
+    private bool isMoving = false;
     // Use this for initialization
     void Start () 
 	{
@@ -14,10 +15,11 @@ public class ScrollingPoolObject : MonoBehaviour
 
 	}
 
-	void Update()
-	{
-
-	}
+    //void Update()
+    //{
+    //    if (isMoving)
+    //        transform.Translate(Vector3.right * Time.deltaTime * GameControl.instance.scrollSpeed);
+    //}
 
     void OnEnable()
     {
@@ -33,11 +35,13 @@ public class ScrollingPoolObject : MonoBehaviour
 
     void StartGame()
     {
+        //isMoving = true;
         rb2d.velocity = new Vector2(GameControl.instance.scrollSpeed, 0);
     }
 
     void GameOver()
     {
+        isMoving = false;
         rb2d.velocity = Vector2.zero;
     }
 }
