@@ -60,10 +60,15 @@ public class ColumnPool : MonoBehaviour
 
                 //Set a random y position for the column
                 float spawnYPosition = Random.Range(columnMin, columnMax);
-
+                //var bottom = getChildGameObject(columns[currentColumn], "tree_bottom");
+                //bottom.transform.position = new Vector2(spawnXPosition, -1.84F - spawnYPosition);
+                //var top = getChildGameObject(gameObject, "tree_top");
+                //bottom.transform.position = new Vector2(spawnXPosition, 4.05F + spawnYPosition);
                 //...then set the current column to that position.
-                columns[currentColumn].transform.position = new Vector2(spawnXPosition, spawnYPosition);
-
+                columns[currentColumn].transform.position = new Vector2(spawnXPosition, 0);
+                var move = getChildGameObject(columns[currentColumn], "move");
+                move.transform.position = new Vector2(spawnXPosition, spawnYPosition);
+                
                 //Increase the value of currentColumn. If the new size is too big, set it back to zero
                 currentColumn++;
 
@@ -75,5 +80,13 @@ public class ColumnPool : MonoBehaviour
 
         }
 	}
+
+    static public GameObject getChildGameObject(GameObject fromGameObject, string withName)
+    {
+        //Author: Isaac Dart, June-13.
+        Transform[] ts = fromGameObject.transform.GetComponentsInChildren<Transform>();
+        foreach (Transform t in ts) if (t.gameObject.name == withName) return t.gameObject;
+        return null;
+    }
 
 }

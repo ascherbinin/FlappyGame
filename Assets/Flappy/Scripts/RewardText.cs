@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class RewardText : MonoBehaviour
 {
     public Text msg;
-    private Vector2 startPos;
     private bool isAlive = false;
 	// Use this for initialization
 	void Start () {

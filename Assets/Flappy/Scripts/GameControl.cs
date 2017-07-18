@@ -6,12 +6,6 @@ using UnityEngine.SceneManagement;
 using System;
 using UnityEngine.Analytics;
 
-public enum Difficult
-{
-    Easy,
-    Normal
-}
-
 public enum State
 {
     Play,
@@ -21,7 +15,7 @@ public enum State
 public class GameControl : MonoBehaviour 
 {
 	public static GameControl instance;			//A reference to our game control script so we can access it statically.
-	public Text scoreText;						//A reference to the UI text component that displays the player's score.
+	public GameObject ScoreText;						//A reference to the UI text component that displays the player's score.
     public State GameState;
     public Text lblButton;
     public Text txtCoinValue;
@@ -29,19 +23,20 @@ public class GameControl : MonoBehaviour
     public GameObject StartPanel;
     public GameObject GameOverCanvas;
     public GameObject HighScorePanel;
+    public GameObject HelpPanel;
     public GameObject Bird;
-    public bool gameOver = false;               //Is the game over?
+    public bool gameOver = false;              
     public float scrollSpeed = 0f;
     public AudioSource backSound;
 
+    public GameObject BonusManager;
     private string UniqueID;
     private ColumnPool _columnPool;
-	//private string inputSTR = "";
-
-
+    private bool inMenu = false;
 
     void Awake()
 	{
+
 		//If we don't currently have a game control...
 		if (instance == null)
 			//...set this one to be it...
@@ -54,37 +49,43 @@ public class GameControl : MonoBehaviour
 
     void Start()
     {
+        ChangeUI(DifficultManager.instance.isFirstStart);
         UniqueID = SystemInfo.deviceUniqueIdentifier;
         MyAnalytics.SetID(UniqueID);
         var dictEvent = new Dictionary<string, object> { { "StartGame", true } };
         MyAnalytics.SendEvent("Start", dictEvent);
         GameState = State.Pause;
+        inMenu = true;
+        ScoreText.SetActive(false);
         _columnPool = GetComponent<ColumnPool>();
         SaveLoad.LoadScores();
-        foreach (var item in SaveLoad.scoresList)
-        {
-            Debug.Log(item.Date + ":" + item.Value);
-        }
     }
 
     void Update()
 	{
-		foreach(KeyCode kcode in Enum.GetValues(typeof(KeyCode)))
-		{
-			if (Input.GetKeyDown(kcode))
-				//Debug.Log("KeyCode down: " + kcode);
-				lblButton.text = ""+kcode;
-		}
+        if (DifficultManager.instance.isFirstStart)
+        {
+            if (Input.anyKeyDown)
+            {
+                ChangeUI(!DifficultManager.instance.isFirstStart);
+                DifficultManager.instance.isFirstStart = false;
+            }
+        }
 
-        //		inputSTR = (string)Input.inputString;
-        //		if(inputSTR != "")
-        //			Debug.Log(inputSTR);
-
+        if (Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.Menu))
+        {
+            if (inMenu) 
+                Application.Quit(); 
+            else
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
 
     public void StartGame()
     {
+        ScoreText.SetActive(true);
         GameState = State.Play;
+        inMenu = false;
         EventManager.TriggerEvent("StartGame");
         StartPanel.gameObject.SetActive(false);
         GameOverCanvas.gameObject.SetActive(false);
@@ -100,7 +101,7 @@ public class GameControl : MonoBehaviour
         GameState = State.Pause;
         SoundManager.instance.PlayFailSound();
         gameOver = true;
-        //Debug.Log("Save score:" + score);
+
         //Activate the game over text.
         GameOverCanvas.gameObject.SetActive(true);
         var currentScore = ScoreManager.instance.Score;
@@ -113,12 +114,11 @@ public class GameControl : MonoBehaviour
         ScoreManager.instance.SaveScore();
         var dictEvent = new Dictionary<string, object> { { "HighScore", currentScore } };
         MyAnalytics.SendEvent("End", dictEvent);
-        //Set the game to be over.
-
     }
 
     public void SetDifficult(Difficult dif)
     {
+        DifficultManager.instance.chooseDif = dif;
         if (dif == Difficult.Easy)
         {
             scrollSpeed = Consts.SCROLL_SPEED * 1.5F;
@@ -127,6 +127,7 @@ public class GameControl : MonoBehaviour
         {
             scrollSpeed = Consts.SCROLL_SPEED * 2.5F;
             _columnPool.spawnRate *= Consts.SPAWN_COL_MODIFICATOR;
+            BonusManager.GetComponent<BonusManager>().spawnRate *= Consts.SPAWN_COL_MODIFICATOR;
         }
     }
 
@@ -142,8 +143,13 @@ public class GameControl : MonoBehaviour
     private void AddBirdScoreRepeat()
     {
         ScoreManager.instance.AddScore(10, false);
-        scoreText.text = "Счет : " + ScoreManager.instance.Score.ToString();
+        ScoreText.GetComponent<Text>().text = "Счет : " + ScoreManager.instance.Score.ToString();
     }
 
+    private void ChangeUI(bool isFirst)
+    {
+        StartPanel.SetActive(!isFirst);
+        HelpPanel.SetActive(isFirst);
+    }
 
 }

@@ -76,8 +76,4 @@ public class ScoreManager : MonoBehaviour
         Score += tmpValue;
     }
 
-    // Update is called once per frame
-    void Update () {
-		
-	}
 }

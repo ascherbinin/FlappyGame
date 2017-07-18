@@ -5,7 +5,6 @@ using UnityEngine;
 public class ScrollingPoolObject : MonoBehaviour 
 {
 	private Rigidbody2D rb2d;
-    private bool isMoving = false;
     // Use this for initialization
     void Start () 
 	{
@@ -41,7 +40,6 @@ public class ScrollingPoolObject : MonoBehaviour
 
     void GameOver()
     {
-        isMoving = false;
         rb2d.velocity = Vector2.zero;
     }
 }

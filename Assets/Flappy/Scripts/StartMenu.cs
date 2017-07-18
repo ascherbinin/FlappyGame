@@ -8,6 +8,7 @@ public class StartMenu : MonoBehaviour
     public Button btnEasy;
     public Button btnNormal;
     private int _selectedIndex = 0;
+    private int _modify = 1;
     private List<Button> _btnList;
     // Use this for initialization
 	void Start ()
@@ -16,6 +17,12 @@ public class StartMenu : MonoBehaviour
         _btnList.Add(btnEasy);
         _btnList.Add(btnNormal);
         //Debug.Log("Count: " + _btnList.Count);
+        if (DifficultManager.instance.chooseDif == Difficult.Normal)
+        {
+            _selectedIndex = 1;
+            _modify = 2;
+        }
+            
     }
 	
 	// Update is called once per frame
@@ -25,7 +32,6 @@ public class StartMenu : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                ScoreManager.instance.Modify = 1;
                 SoundManager.instance.PlaySelectSound();
                 if (_selectedIndex != 0)
                 {
@@ -38,7 +44,7 @@ public class StartMenu : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                ScoreManager.instance.Modify = 2;
+                _modify -= 1;
                 SoundManager.instance.PlaySelectSound();
                 _selectedIndex++;
                 if (_selectedIndex > _btnList.Count - 1)
@@ -53,6 +59,8 @@ public class StartMenu : MonoBehaviour
             GameControl.instance.UpdateLegends();
             DrawButtons(_selectedIndex);
         }
+
+        ScoreManager.instance.Modify = _selectedIndex  == 0 ? 1 : 2;
     }
 
     void DrawButtons (int selectIdx)
